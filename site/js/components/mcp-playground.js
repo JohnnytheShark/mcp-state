@@ -173,7 +173,7 @@ function initPlaygroundLogic(container) {
           response = {
             jsonrpc: "2.0",
             result: {
-              content: [{ type: "text", text: \`Successfully archived key: \${key}\` }]
+              content: [{ type: "text", text: `Successfully archived key: ${key}` }]
             },
             id: request.id
           };
@@ -181,7 +181,7 @@ function initPlaygroundLogic(container) {
           response = {
             jsonrpc: "2.0",
             result: {
-              content: [{ type: "text", text: \`Key \${key} not found\` }],
+              content: [{ type: "text", text: `Key ${key} not found` }],
               isError: true
             },
             id: request.id
@@ -189,7 +189,7 @@ function initPlaygroundLogic(container) {
         }
       }
 
-      outputBox.textContent = \`// → stdin (JSON-RPC Request):\n\${JSON.stringify(request, null, 2)}\n\n// ← stdout (JSON-RPC Response):\n\${JSON.stringify(response, null, 2)}\`;
+      outputBox.textContent = `// → stdin (JSON-RPC Request):\n${JSON.stringify(request, null, 2)}\n\n// ← stdout (JSON-RPC Response):\n${JSON.stringify(response, null, 2)}`;
     }, 150);
   });
 }
