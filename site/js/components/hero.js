@@ -34,7 +34,7 @@ export function renderHero(containerId = 'hero-container') {
               <div class="install-command-wrap">
                 <div class="command-content">
                   <span class="prompt-sym">$</span>
-                  <span id="hero-cmd-text">curl -fsSL https://raw.githubusercontent.com/JohnnytheShark/mcp-state/main/install.sh | bash</span>
+                  <span id="hero-cmd-text">curl -fsSL https://raw.githubusercontent.com/JohnnytheShark/mcp-state/master/install.sh | bash</span>
                 </div>
                 <button class="copy-btn" id="hero-copy-cmd-btn" title="Copy command to clipboard" aria-label="Copy installation command">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -82,8 +82,8 @@ export function renderHero(containerId = 'hero-container') {
 
   // Attach command tab switching
   const commands = {
-    'curl-sh': 'curl -fsSL https://raw.githubusercontent.com/JohnnytheShark/mcp-state/main/install.sh | bash',
-    'powershell': 'irm https://raw.githubusercontent.com/JohnnytheShark/mcp-state/main/install.ps1 | iex',
+    'curl-sh': 'curl -fsSL https://raw.githubusercontent.com/JohnnytheShark/mcp-state/master/install.sh | bash',
+    'powershell': 'irm https://raw.githubusercontent.com/JohnnytheShark/mcp-state/master/install.ps1 | iex',
     'cargo': 'cargo install --git https://github.com/JohnnytheShark/mcp-state mcp-state'
   };
 

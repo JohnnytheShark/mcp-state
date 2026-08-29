@@ -20,12 +20,12 @@ Full Diataxis documentation, interactive API playgrounds, and architectural guid
 
 ### Linux / macOS
 ```bash
-curl -fsSL https://raw.githubusercontent.com/JohnnytheShark/mcp-state/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/JohnnytheShark/mcp-state/master/install.sh | bash
 ```
 
 ### Windows PowerShell
 ```powershell
-irm https://raw.githubusercontent.com/JohnnytheShark/mcp-state/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/JohnnytheShark/mcp-state/master/install.ps1 | iex
 ```
 
 ### From Source
