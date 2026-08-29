@@ -26,13 +26,15 @@ export function renderHero(containerId = 'hero-container') {
 
             <div class="hero-installer-box">
               <div class="install-tabs" role="tablist">
-                <button class="inst-tab active" data-tab="cargo" role="tab" aria-selected="true">Cargo</button>
+                <button class="inst-tab active" data-tab="curl-sh" role="tab" aria-selected="true">Linux / macOS</button>
+                <button class="inst-tab" data-tab="powershell" role="tab" aria-selected="false">Windows PowerShell</button>
+                <button class="inst-tab" data-tab="cargo" role="tab" aria-selected="false">Cargo</button>
               </div>
 
               <div class="install-command-wrap">
                 <div class="command-content">
                   <span class="prompt-sym">$</span>
-                  <span id="hero-cmd-text">cargo run --release</span>
+                  <span id="hero-cmd-text">curl -fsSL https://raw.githubusercontent.com/JohnnytheShark/mcp-state/main/install.sh | bash</span>
                 </div>
                 <button class="copy-btn" id="hero-copy-cmd-btn" title="Copy command to clipboard" aria-label="Copy installation command">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -80,7 +82,9 @@ export function renderHero(containerId = 'hero-container') {
 
   // Attach command tab switching
   const commands = {
-    'cargo': 'cargo run --release'
+    'curl-sh': 'curl -fsSL https://raw.githubusercontent.com/JohnnytheShark/mcp-state/main/install.sh | bash',
+    'powershell': 'irm https://raw.githubusercontent.com/JohnnytheShark/mcp-state/main/install.ps1 | iex',
+    'cargo': 'cargo install --git https://github.com/JohnnytheShark/mcp-state mcp-state'
   };
 
   const tabs = container.querySelectorAll('.inst-tab');
