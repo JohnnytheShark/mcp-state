@@ -1,0 +1,19 @@
+[package]
+name = "mcp-state"
+version = "0.1.0"
+edition = "2021"
+authors = ["Johnny Orellana <johnny@johnnytheshark.dev>"]
+description = "A Model Context Protocol (MCP) server for AI agent state management using a SQLite-backed blackboard pattern."
+license = "Apache-2.0"
+repository = "https://github.com/JohnnytheShark/mcp-state"
+homepage = "https://johnnytheshark.github.io/mcp-state/"
+readme = "README.md"
+keywords = ["mcp", "ai", "agent", "sqlite", "blackboard"]
+categories = ["command-line-utilities", "database"]
+
+[dependencies]
+tokio = { version = "1.37", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rusqlite = { version = "0.31", features = ["bundled"] }
+chrono = "0.4"

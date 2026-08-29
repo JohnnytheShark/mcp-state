@@ -1,0 +1,37 @@
+# mcp-state
+
+> High-signal, low-noise agent state management over MCP stdio.
+
+## Overview
+mcp-state is a Model Context Protocol (MCP) server that implements the blackboard pattern for AI agent state management using embedded SQLite.
+
+## Source Code
+https://github.com/JohnnytheShark/mcp-state
+
+## Tools
+- `read_blackboard(session_id)` — Read the full JSON state for a session
+- `patch_blackboard(session_id, json_patch)` — Merge a JSON patch into the active state
+- `archive_subtask(session_id, key_to_archive)` — Move a key to cold storage to keep the active blackboard small
+
+## Protocol
+- MCP 2024-11-05 over stdio (JSON-RPC 2.0)
+
+## Database
+- Active state: `active_blackboard` table (hot, small, frequently accessed)
+- Archived data: `cold_storage` table (durable audit log)
+
+## Use Cases
+- Persist agent working state across conversation turns
+- Coordinate multi-agent workflows via a shared blackboard
+- Prevent context window bloat by archiving completed subtasks
+
+## Quick Start
+```
+cargo run --release
+```
+
+## Documentation
+https://johnnytheshark.github.io/mcp-state/
+
+## License
+Apache-2.0 — Copyright 2026 Johnny Orellana

@@ -1,0 +1,25 @@
+# Normalize line endings to LF in the repo for all text files
+* text=auto eol=lf
+
+# Rust source
+*.rs text eol=lf
+
+# Shell scripts must be LF
+*.sh text eol=lf
+
+# Windows scripts stay CRLF
+*.ps1 text eol=crlf
+
+# Docs / config
+*.md text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.html text eol=lf
+*.txt text eol=lf
+
+# Binaries
+*.db binary
+*.lock text eol=lf

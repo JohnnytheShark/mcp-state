@@ -1,0 +1,169 @@
+/**
+ * tokens.css — Earthy, Organic Design Tokens for skill-cli
+ * 
+ * Strict 5-Color Palette:
+ * 1. #12130F — Near-black, ink (Primary Canvas & Dark Surfaces)
+ * 2. #5B9279 — Muted Sage Green (Structural Badges & Secondary Accents)
+ * 3. #8FCB9B — Soft Leaf Green (Primary Interactive & Highlights)
+ * 4. #EAE6E5 — Warm Off-White (Primary Typography & Light Elements)
+ * 5. #8F8073 — Warm Taupe / Bark (Structural Dividers, Borders & Muted Text)
+ */
+
+:root {
+  /* Strict 5-Color Core Tokens */
+  --color-ink: #12130F;
+  --color-sage: #5B9279;
+  --color-leaf: #8FCB9B;
+  --color-offwhite: #EAE6E5;
+  --color-taupe: #8F8073;
+
+  /* Surface & Background Hierarchies */
+  --bg-canvas: #12130F;
+  --bg-surface: #181914;
+  --bg-surface-raised: #1f211b;
+  --bg-surface-hover: #262822;
+  --bg-surface-glass: rgba(18, 19, 15, 0.88);
+  --bg-card: #161713;
+  --bg-card-hover: #1c1e18;
+  --bg-code: #0e0f0c;
+
+  /* Border & Divider System */
+  --border-subtle: rgba(143, 128, 115, 0.25);
+  --border-medium: rgba(143, 128, 115, 0.45);
+  --border-strong: #8F8073;
+  --border-sage: #5B9279;
+  --border-leaf: #8FCB9B;
+  --border-accent: rgba(91, 146, 121, 0.5);
+
+  /* Typography Colors */
+  --text-main: #EAE6E5;
+  --text-muted: #8F8073;
+  --text-dim: rgba(143, 128, 115, 0.75);
+  --text-accent: #8FCB9B;
+  --text-sage: #5B9279;
+  --text-inverse: #12130F;
+
+  /* Diataxis Pillar Theming (Unified Earthy Palette) */
+  --q-tutorials-border: #5B9279;
+  --q-tutorials-bg: rgba(91, 146, 121, 0.08);
+  --q-howto-border: #8FCB9B;
+  --q-howto-bg: rgba(143, 203, 155, 0.08);
+  --q-reference-border: #8F8073;
+  --q-reference-bg: rgba(143, 128, 115, 0.08);
+  --q-explanation-border: rgba(91, 146, 121, 0.6);
+  --q-explanation-bg: rgba(18, 19, 15, 0.95);
+
+  /* Typography Font Stacks */
+  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Layout & Geometry */
+  --max-width: 1200px;
+  --header-height: 68px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* Shadows (Tactile & Deep, No Glow Blobs) */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+  --shadow-inset: inset 0 1px 0 rgba(234, 230, 229, 0.06);
+
+  /* Focus Indicator for Accessible Keyboard Navigation */
+  --focus-ring: 0 0 0 2px #12130F, 0 0 0 4px #8FCB9B;
+
+  /* Motion & Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+}
+
+/* Global Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-main);
+  background-color: var(--bg-canvas);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  background-color: var(--bg-canvas);
+  color: var(--text-main);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+code, pre, kbd {
+  font-family: var(--font-mono);
+}
+
+/* Universal Visible Keyboard Focus */
+:focus-visible {
+  outline: 2px solid var(--color-leaf);
+  outline-offset: 2px;
+}
+
+/* Tactile Organic Background Substrate */
+.bg-substrate {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #12130F;
+  background-image: 
+    radial-gradient(ellipse at 20% 0%, rgba(91, 146, 121, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(143, 128, 115, 0.06) 0%, transparent 60%);
+}
+
+/* Subtle Organic Grid Texture */
+.bg-grid-substrate {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, rgba(143, 128, 115, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(143, 128, 115, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

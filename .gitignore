@@ -1,0 +1,15 @@
+/target/
+**/*.rs.bk
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# mcp-state specific
+blackboard.db
+blackboard.db-journal
+blackboard.db-wal
+blackboard.db-shm
