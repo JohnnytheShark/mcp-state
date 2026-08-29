@@ -7,7 +7,7 @@ import { HOWTO_DATA } from './how-to.js';
 import { REFERENCE_DATA } from './reference.js';
 import { EXPLANATION_DATA } from './explanation.js';
 
-export const DOCS_DATA = {
+const RAW_DOCS_DATA = {
   ...TUTORIALS_DATA,
   ...HOWTO_DATA,
   ...REFERENCE_DATA,
@@ -59,3 +59,24 @@ export const DOCS_CATEGORIES = [
     ]
   }
 ];
+
+export const DOCS_DATA = {};
+for (const key in RAW_DOCS_DATA) {
+  const content = RAW_DOCS_DATA[key];
+  const titleMatch = content.match(/^#\s+(.+)$/m);
+  const title = titleMatch ? titleMatch[1] : key.split('/').pop().replace('.md', '');
+  
+  let category = "Documentation";
+  for (const cat of DOCS_CATEGORIES) {
+    if (cat.keys.includes(key)) {
+      category = cat.name;
+      break;
+    }
+  }
+
+  DOCS_DATA[key] = {
+    title,
+    content,
+    category
+  };
+}
