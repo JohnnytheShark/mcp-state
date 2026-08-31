@@ -31,7 +31,7 @@ pub fn handle_request(req: &RpcRequest, registry: &ToolRegistry) -> Result<Value
             },
             "serverInfo": {
                 "name": "mcp-state",
-                "version": "0.1.0"
+                "version": "0.2.0"
             }
         })),
         "tools/list" => Ok(registry.list_tools()),

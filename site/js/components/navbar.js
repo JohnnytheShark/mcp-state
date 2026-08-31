@@ -14,7 +14,7 @@ export function renderNavbar(containerId = 'navbar-container') {
             <span class="logo-text">MS</span>
           </div>
           <span class="brand-name">mcp-state</span>
-          <span class="brand-badge">v0.1.0</span>
+          <span class="brand-badge">v0.2.0</span>
         </a>
 
         <div class="nav-links">
