@@ -1,15 +1,15 @@
+mod rpc;
 mod service;
 mod tools;
-mod rpc;
 
 use rusqlite::Connection;
 use serde_json::json;
 use std::sync::Arc;
 use tokio::io::{AsyncBufReadExt, BufReader};
 
+use crate::rpc::{handle_request, RpcRequest, RpcResponse};
 use crate::service::BlackboardService;
 use crate::tools::ToolRegistry;
-use crate::rpc::{RpcRequest, RpcResponse, handle_request};
 
 use std::path::PathBuf;
 
@@ -31,11 +31,11 @@ fn get_db_path() -> Result<PathBuf, Box<dyn std::error::Error>> {
             p
         }
     };
-    
+
     path.push("mcp-state");
     std::fs::create_dir_all(&path)?;
     path.push("blackboard.db");
-    
+
     Ok(path)
 }
 
@@ -53,15 +53,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         if line.trim().is_empty() {
             continue;
         }
-        
+
         let req: Result<RpcRequest, _> = serde_json::from_str(&line);
         match req {
             Ok(rpc_req) => {
                 let id = rpc_req.id.clone();
                 let is_notification = id.is_none();
-                
+
                 let result = handle_request(&rpc_req, &registry);
-                
+
                 if !is_notification {
                     let response = match result {
                         Ok(res) => RpcResponse {
@@ -75,7 +75,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             result: None,
                             error: Some(err),
                             id,
-                        }
+                        },
                     };
 
                     let out = serde_json::to_string(&response)?;
@@ -86,7 +86,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let err_res = RpcResponse {
                     jsonrpc: "2.0".to_string(),
                     result: None,
-                    error: Some(json!({ "code": -32700, "message": "Parse error", "data": e.to_string() })),
+                    error: Some(
+                        json!({ "code": -32700, "message": "Parse error", "data": e.to_string() }),
+                    ),
                     id: None,
                 };
                 let out = serde_json::to_string(&err_res)?;

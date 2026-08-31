@@ -1,6 +1,6 @@
+use crate::tools::ToolRegistry;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use crate::tools::ToolRegistry;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RpcRequest {
@@ -24,24 +24,31 @@ pub struct RpcResponse {
 
 pub fn handle_request(req: &RpcRequest, registry: &ToolRegistry) -> Result<Value, Value> {
     match req.method.as_str() {
-        "initialize" => {
-            Ok(json!({
-                "protocolVersion": "2024-11-05",
-                "capabilities": {
-                    "tools": {}
-                },
-                "serverInfo": {
-                    "name": "mcp-state",
-                    "version": "0.1.0"
-                }
-            }))
-        }
+        "initialize" => Ok(json!({
+            "protocolVersion": "2024-11-05",
+            "capabilities": {
+                "tools": {}
+            },
+            "serverInfo": {
+                "name": "mcp-state",
+                "version": "0.1.0"
+            }
+        })),
         "tools/list" => Ok(registry.list_tools()),
         "tools/call" => {
-            let params = req.params.as_ref().ok_or_else(|| json!({ "code": -32602, "message": "Missing params" }))?;
-            let name = params.get("name").and_then(Value::as_str).ok_or_else(|| json!({ "code": -32602, "message": "Missing tool name" }))?;
-            let args = params.get("arguments").and_then(Value::as_object).ok_or_else(|| json!({ "code": -32602, "message": "Missing arguments" }))?;
-            
+            let params = req
+                .params
+                .as_ref()
+                .ok_or_else(|| json!({ "code": -32602, "message": "Missing params" }))?;
+            let name = params
+                .get("name")
+                .and_then(Value::as_str)
+                .ok_or_else(|| json!({ "code": -32602, "message": "Missing tool name" }))?;
+            let args = params
+                .get("arguments")
+                .and_then(Value::as_object)
+                .ok_or_else(|| json!({ "code": -32602, "message": "Missing arguments" }))?;
+
             registry.call_tool(name, args)
         }
         "notifications/initialized" => Ok(json!({})),
