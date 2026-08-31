@@ -11,9 +11,38 @@ use crate::service::BlackboardService;
 use crate::tools::ToolRegistry;
 use crate::rpc::{RpcRequest, RpcResponse, handle_request};
 
+use std::path::PathBuf;
+
+fn get_db_path() -> Result<PathBuf, Box<dyn std::error::Error>> {
+    let mut path = if cfg!(target_os = "windows") {
+        PathBuf::from(std::env::var("APPDATA")?)
+    } else if cfg!(target_os = "macos") {
+        let mut p = PathBuf::from(std::env::var("HOME")?);
+        p.push("Library");
+        p.push("Application Support");
+        p
+    } else {
+        if let Ok(xdg) = std::env::var("XDG_DATA_HOME") {
+            PathBuf::from(xdg)
+        } else {
+            let mut p = PathBuf::from(std::env::var("HOME")?);
+            p.push(".local");
+            p.push("share");
+            p
+        }
+    };
+    
+    path.push("mcp-state");
+    std::fs::create_dir_all(&path)?;
+    path.push("blackboard.db");
+    
+    Ok(path)
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let conn = Connection::open("blackboard.db")?;
+    let db_path = get_db_path()?;
+    let conn = Connection::open(db_path)?;
     let service = Arc::new(BlackboardService::new(conn)?);
     let registry = ToolRegistry::new(service);
 
