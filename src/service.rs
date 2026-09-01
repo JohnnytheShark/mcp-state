@@ -8,6 +8,10 @@ pub struct BlackboardService {
 
 impl BlackboardService {
     pub fn new(conn: Connection) -> SqlResult<Self> {
+        conn.pragma_update(None, "journal_mode", "WAL")?;
+        conn.pragma_update(None, "busy_timeout", 5000_u32)?;
+        conn.pragma_update(None, "synchronous", "NORMAL")?;
+
         conn.execute(
             "CREATE TABLE IF NOT EXISTS active_blackboard (
                 session_id TEXT PRIMARY KEY,
@@ -25,14 +29,17 @@ impl BlackboardService {
             )",
             [],
         )?;
-        Ok(Self { conn: Arc::new(Mutex::new(conn)) })
+        Ok(Self {
+            conn: Arc::new(Mutex::new(conn)),
+        })
     }
 
     pub fn read_blackboard(&self, session_id: &str) -> SqlResult<String> {
         let conn = self.conn.lock().unwrap();
-        let mut stmt = conn.prepare("SELECT state_data FROM active_blackboard WHERE session_id = ?1")?;
+        let mut stmt =
+            conn.prepare("SELECT state_data FROM active_blackboard WHERE session_id = ?1")?;
         let mut rows = stmt.query(rusqlite::params![session_id])?;
-        
+
         if let Some(row) = rows.next()? {
             let state_data: String = row.get(0)?;
             Ok(state_data)
@@ -41,19 +48,29 @@ impl BlackboardService {
         }
     }
 
-    pub fn patch_blackboard(&self, session_id: &str, patch: &serde_json::Map<String, Value>) -> SqlResult<String> {
-        let conn = self.conn.lock().unwrap();
-        let mut stmt = conn.prepare("SELECT state_data FROM active_blackboard WHERE session_id = ?1")?;
-        let mut rows = stmt.query(rusqlite::params![session_id])?;
-        
+    pub fn patch_blackboard(
+        &self,
+        session_id: &str,
+        patch: &serde_json::Map<String, Value>,
+    ) -> SqlResult<String> {
+        let mut conn = self.conn.lock().unwrap();
+        let tx = conn.transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)?;
+
         let mut current_state = serde_json::Map::new();
         let mut is_new = true;
-        if let Some(row) = rows.next()? {
-            let state_data_str: String = row.get(0)?;
-            if let Ok(Value::Object(map)) = serde_json::from_str(&state_data_str) {
-                current_state = map;
+
+        {
+            let mut stmt =
+                tx.prepare("SELECT state_data FROM active_blackboard WHERE session_id = ?1")?;
+            let mut rows = stmt.query(rusqlite::params![session_id])?;
+
+            if let Some(row) = rows.next()? {
+                let state_data_str: String = row.get(0)?;
+                if let Ok(Value::Object(map)) = serde_json::from_str(&state_data_str) {
+                    current_state = map;
+                }
+                is_new = false;
             }
-            is_new = false;
         }
 
         for (k, v) in patch {
@@ -64,46 +81,65 @@ impl BlackboardService {
         let updated_at = chrono::Utc::now().to_rfc3339();
 
         if is_new {
-            conn.execute(
+            tx.execute(
                 "INSERT INTO active_blackboard (session_id, state_data, updated_at) VALUES (?1, ?2, ?3)",
                 rusqlite::params![session_id, new_state_str, updated_at],
             )?;
         } else {
-            conn.execute(
+            tx.execute(
                 "UPDATE active_blackboard SET state_data = ?1, updated_at = ?2 WHERE session_id = ?3",
                 rusqlite::params![new_state_str, updated_at, session_id],
             )?;
         }
 
+        tx.commit()?;
         Ok(new_state_str)
     }
 
-    pub fn archive_subtask(&self, session_id: &str, key_to_archive: &str) -> SqlResult<Result<String, String>> {
-        let conn = self.conn.lock().unwrap();
-        let mut stmt = conn.prepare("SELECT state_data FROM active_blackboard WHERE session_id = ?1")?;
-        let mut rows = stmt.query(rusqlite::params![session_id])?;
-        
-        if let Some(row) = rows.next()? {
-            let state_data_str: String = row.get(0)?;
-            if let Ok(Value::Object(mut map)) = serde_json::from_str(&state_data_str) {
+    pub fn archive_subtask(
+        &self,
+        session_id: &str,
+        key_to_archive: &str,
+    ) -> SqlResult<Result<String, String>> {
+        let mut conn = self.conn.lock().unwrap();
+        let tx = conn.transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)?;
+
+        let state_data_str: Option<String> = {
+            let mut stmt =
+                tx.prepare("SELECT state_data FROM active_blackboard WHERE session_id = ?1")?;
+            let mut rows = stmt.query(rusqlite::params![session_id])?;
+            if let Some(row) = rows.next()? {
+                Some(row.get(0)?)
+            } else {
+                None
+            }
+        };
+
+        if let Some(state_str) = state_data_str {
+            if let Ok(Value::Object(mut map)) = serde_json::from_str(&state_str) {
                 if let Some(archived_val) = map.remove(key_to_archive) {
-                    let archived_data_str = serde_json::to_string(&archived_val).unwrap_or_default();
+                    let archived_data_str =
+                        serde_json::to_string(&archived_val).unwrap_or_default();
                     let now = chrono::Utc::now().to_rfc3339();
-                    
-                    conn.execute(
+
+                    tx.execute(
                         "INSERT INTO cold_storage (session_id, archived_data, archived_at) VALUES (?1, ?2, ?3)",
                         rusqlite::params![session_id, archived_data_str, now],
                     )?;
-                    
+
                     let new_state_str = serde_json::to_string(&map).unwrap_or_default();
-                    conn.execute(
+                    tx.execute(
                         "UPDATE active_blackboard SET state_data = ?1, updated_at = ?2 WHERE session_id = ?3",
                         rusqlite::params![new_state_str, now, session_id],
                     )?;
 
+                    tx.commit()?;
                     Ok(Ok(format!("Successfully archived key: {}", key_to_archive)))
                 } else {
-                    Ok(Err(format!("Key {} not found in session {}", key_to_archive, session_id)))
+                    Ok(Err(format!(
+                        "Key {} not found in session {}",
+                        key_to_archive, session_id
+                    )))
                 }
             } else {
                 Ok(Err("Invalid state data format".to_string()))
@@ -157,7 +193,10 @@ mod tests {
         let session = "test_session_2";
 
         let mut patch = serde_json::Map::new();
-        patch.insert("subtask_a".to_string(), json!({"status": "complete", "result": 42}));
+        patch.insert(
+            "subtask_a".to_string(),
+            json!({"status": "complete", "result": 42}),
+        );
         patch.insert("subtask_b".to_string(), json!({"status": "pending"}));
         service.patch_blackboard(session, &patch).unwrap();
 
@@ -170,9 +209,11 @@ mod tests {
         assert!(state_val.get("subtask_b").is_some());
 
         let conn = service.conn.lock().unwrap();
-        let mut stmt = conn.prepare("SELECT archived_data FROM cold_storage WHERE session_id = ?1").unwrap();
+        let mut stmt = conn
+            .prepare("SELECT archived_data FROM cold_storage WHERE session_id = ?1")
+            .unwrap();
         let mut rows = stmt.query(rusqlite::params![session]).unwrap();
-        
+
         let row = rows.next().unwrap().expect("Expected to find archived row");
         let archived_str: String = row.get(0).unwrap();
         let archived_val: Value = serde_json::from_str(&archived_str).unwrap();

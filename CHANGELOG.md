@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-31
+
+### Added
+- Centralized database location in user data directory (`%APPDATA%`, `~/.local/share`, etc) mapped by `session_id`.
+- SQLite database concurrency hardening (WAL mode, busy timeouts, explicit transactions).
+
 ## [0.1.0] - 2026-08-28
 
 ### Added
@@ -25,5 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Install scripts for Linux/macOS (`install.sh`) and Windows (`install.ps1`).
 - Apache 2.0 License.
 
-[Unreleased]: https://github.com/JohnnytheShark/mcp-state/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/JohnnytheShark/mcp-state/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/JohnnytheShark/mcp-state/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/JohnnytheShark/mcp-state/releases/tag/v0.1.0

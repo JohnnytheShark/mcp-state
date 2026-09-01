@@ -18,7 +18,7 @@ This will produce a binary in `target/release/mcp-state`.
 
 ## 2. Run the Server
 
-The server uses standard input and output (stdin/stdout) for MCP communication and will create an SQLite database named `blackboard.db` in its working directory.
+The server uses standard input and output (stdin/stdout) for MCP communication and will create an SQLite database named `blackboard.db` in your user data directory (`%APPDATA%\mcp-state\` on Windows, `~/.local/share/mcp-state/` on Linux, or `~/Library/Application Support/mcp-state/` on macOS). On Linux, if `$XDG_DATA_HOME` is set, that directory is used instead of `~/.local/share`.
 
 ```bash
 cargo run

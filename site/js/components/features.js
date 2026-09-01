@@ -28,7 +28,7 @@ export function renderFeatures(containerId = 'features-container') {
             </div>
             <h3>Embedded SQLite Core</h3>
             <p>
-              Statically compiled with <code>rusqlite</code>. Zero local database servers to install or manage. Stores session state in a single local file <code>blackboard.db</code>.
+              Statically compiled with <code>rusqlite</code>. Zero local database servers to install or manage. Stores session state in a centralized <code>blackboard.db</code> file.
             </p>
           </div>
 

@@ -1,6 +1,6 @@
 [package]
 name = "mcp-state"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 authors = ["Johnny Orellana <johnny@johnnytheshark.dev>"]
 description = "A Model Context Protocol (MCP) server for AI agent state management using a SQLite-backed blackboard pattern."

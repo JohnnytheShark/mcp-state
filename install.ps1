@@ -1,6 +1,6 @@
 # ==============================================================================
 # mcp-state Installer for Windows PowerShell
-# Usage: irm https://raw.githubusercontent.com/JohnnytheShark/mcp-state/main/install.ps1 | iex
+# Usage: irm https://raw.githubusercontent.com/JohnnytheShark/mcp-state/master/install.ps1 | iex
 # ==============================================================================
 
 $ErrorActionPreference = "Stop"
@@ -21,7 +21,7 @@ $Target = "x86_64-pc-windows-msvc"
 
 # 2. Get Latest Tag
 Write-Host "[+] Querying GitHub for latest release..." -ForegroundColor Green
-$Tag = "v0.1.0"
+$Tag = "v0.2.0"
 try {
     $ReleaseInfo = Invoke-RestMethod -Uri $GitHubApi -Headers @{ "User-Agent" = "mcp-state-installer" }
     if ($ReleaseInfo.tag_name) {

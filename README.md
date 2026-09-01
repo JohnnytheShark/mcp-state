@@ -11,7 +11,7 @@ Full Diataxis documentation, interactive API playgrounds, and architectural guid
 
 ## Features
 
-- **Embedded SQLite Core**: Zero database servers to manage. Everything is stored in a local `blackboard.db` file.
+- **Embedded SQLite Core**: Zero database servers to manage. Everything is stored in a centralized `blackboard.db` file in your user data directory.
 - **JSON Patching**: Agents update state incrementally via JSON-RPC.
 - **Cold Storage Archiving**: Agents can archive completed subtasks to a `cold_storage` table to preserve their context window limits.
 - **Native stdio MCP Server**: Fully compliant with MCP 2024-11-05 standard over standard I/O streams.
