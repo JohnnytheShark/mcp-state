@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # mcp-state Installer for Linux and macOS
-# Usage: curl -fsSL https://raw.githubusercontent.com/JohnnytheShark/mcp-state/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/JohnnytheShark/mcp-state/master/install.sh | bash
 # ==============================================================================
 
 set -euo pipefail

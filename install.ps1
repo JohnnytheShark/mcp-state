@@ -1,6 +1,6 @@
 # ==============================================================================
 # mcp-state Installer for Windows PowerShell
-# Usage: irm https://raw.githubusercontent.com/JohnnytheShark/mcp-state/main/install.ps1 | iex
+# Usage: irm https://raw.githubusercontent.com/JohnnytheShark/mcp-state/master/install.ps1 | iex
 # ==============================================================================
 
 $ErrorActionPreference = "Stop"
