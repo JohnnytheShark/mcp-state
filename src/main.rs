@@ -1,7 +1,7 @@
+mod database;
 mod rpc;
 mod service;
 mod tools;
-mod database;
 use rusqlite::Connection;
 use serde_json::json;
 use std::sync::Arc;
@@ -10,7 +10,6 @@ use tokio::io::{AsyncBufReadExt, BufReader};
 use crate::rpc::{handle_request, RpcRequest, RpcResponse};
 use crate::service::BlackboardService;
 use crate::tools::ToolRegistry;
-
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -72,5 +71,3 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
-
-

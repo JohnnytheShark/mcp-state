@@ -1,4 +1,3 @@
-
 use std::path::PathBuf;
 
 pub fn build_db_path(
